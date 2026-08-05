@@ -1,4 +1,0 @@
-git checkout -b feat/ShafqatUllah  :     "feat/Shafqatullah ..... is the name of branch "
-git add .  ................: "it will add proper the branch"
-git commit -m 'new file ' ........."use for commit'
-git push -u origin feat/shafqatulah     .......... "it will push the buranch"
