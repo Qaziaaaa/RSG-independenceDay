@@ -1,4 +1,9 @@
-# OS
+node_modules/
+.env
+npm-debug.log*
+coverage/
+dist/
+*.log
 .DS_Store
 Thumbs.db
 
