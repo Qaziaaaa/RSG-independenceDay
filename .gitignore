@@ -5,3 +5,4 @@ Thumbs.db
 # test artifacts
 tests/shot_*.png
 tests/output/
+.vercel
