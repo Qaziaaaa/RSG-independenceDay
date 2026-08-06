@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "framework": "other",
+  "framework": null,
   "installCommand": null,
   "buildCommand": null,
   "cleanUrls": true,
