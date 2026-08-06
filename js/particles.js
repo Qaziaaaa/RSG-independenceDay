@@ -4,7 +4,7 @@
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
   let w, h, particles = [];
-  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+  const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
 
   function resize() {
     w = canvas.width = window.innerWidth * DPR;
@@ -17,7 +17,7 @@
     return {
       x: Math.random() * w,
       y: Math.random() * h,
-      r: (Math.random() * 1.6 + 0.3) * DPR,
+      r: (Math.random() * 1.5 + 0.3) * DPR,
       vx: (Math.random() - 0.5) * 0.16 * DPR,
       vy: -((Math.random() * 0.24 + 0.06) * DPR),
       a: Math.random() * Math.PI * 2,
@@ -26,7 +26,7 @@
     };
   }
 
-  const COUNT = Math.min(Math.round((w * h) / 16000), 110);
+  const COUNT = Math.min(Math.round((w * h) / 26000), 72);
 
   function init() {
     resize();
@@ -34,8 +34,9 @@
   }
 
   let intensity = 1;
+  let visible = !document.hidden;
 
-  function loop() {
+  function draw() {
     ctx.clearRect(0, 0, w, h);
     for (const p of particles) {
       p.x += p.vx * intensity;
@@ -45,7 +46,7 @@
       if (p.x < -6) p.x = w + 6;
       if (p.x > w + 6) p.x = -6;
 
-      const alpha = (0.14 + 0.3 * (0.5 + 0.5 * Math.sin(p.tw))) * intensity;
+      const alpha = (0.1 + 0.22 * (0.5 + 0.5 * Math.sin(p.tw))) * intensity;
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
       ctx.fillStyle = p.gold
@@ -53,8 +54,16 @@
         : `rgba(127, 214, 160, ${alpha * 0.7})`;
       ctx.fill();
     }
+  }
+
+  function loop() {
+    if (visible && w > 0 && h > 0) draw();
     requestAnimationFrame(loop);
   }
+
+  document.addEventListener("visibilitychange", () => {
+    visible = !document.hidden;
+  });
 
   window.Dust = {
     init,

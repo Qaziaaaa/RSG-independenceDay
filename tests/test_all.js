@@ -136,4 +136,5 @@ async function run(vp) {
 (async () => {
   await run({ width: 1280, height: 800 });
   await run({ width: 390, height: 844 });
+  process.exit(0);
 })().catch((e) => { console.error("FATAL", e); process.exit(1); });

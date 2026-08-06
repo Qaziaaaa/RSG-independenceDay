@@ -82,10 +82,10 @@
         y: 0,
         scale: 1,
         rotation: 0,
-        duration: 1.5,
-        stagger: 0.17,
+        duration: 1.15,
+        stagger: 0.11,
         ease: "power3.out",
-        delay: 0.25
+        delay: 0.15
       });
   }
 
@@ -105,13 +105,13 @@
 
   function showFragmentsMessage() {
     revealQuote("msg1");
-    gsap.to("#fragmentsMessage .frag-rule", { opacity: 1, duration: 0.6, delay: 0.2 });
+    gsap.to("#fragmentsMessage .frag-rule", { opacity: 1, duration: 0.6, delay: 0.12 });
     gsap.to("#reconstructBtn", {
       opacity: 1,
       y: 0,
       duration: 0.7,
       ease: "power3.out",
-      delay: 0.9,
+      delay: 0.6,
       onComplete: () => document.getElementById("reconstructBtn").classList.add("ready")
     });
   }
@@ -131,18 +131,18 @@
         rotation: () => gsap.utils.random(180, 320),
         scale: 0.3,
         opacity: 0,
-        duration: 1.05,
+        duration: 0.75,
         ease: "power2.in",
-        delay: 0.15
+        delay: 0.1
       });
     });
 
     gsap.to("#fragments .quote", { opacity: 0, duration: 0.5, delay: 0.1 });
     gsap.to("#reconstructBtn", { opacity: 0, duration: 0.4, delay: 0.1 });
 
-    gsap.delayedCall(1.05, () => {
+    gsap.delayedCall(0.75, () => {
       flash();
-      gsap.delayedCall(0.35, () => {
+      gsap.delayedCall(0.3, () => {
         if (onComplete) onComplete();
       });
     });
@@ -179,15 +179,15 @@
     });
 
     const tl = gsap.timeline();
-    tl.to("#reconFlag", { scale: 1, duration: 0.9, ease: "power3.out" }, 0)
-      .to(shards, { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, duration: 1.05, stagger: 0.06, ease: "power3.out" }, 0)
-      .to(cres, { attr: { "stroke-dashoffset": 0 }, duration: 0.7, ease: "power1.inOut" }, "+=0.15")
-      .to(cres, { attr: { "fill-opacity": 1 }, duration: 0.4, ease: "power2.out" }, "-=0.15")
-      .to(cres, { attr: { "stroke-width": 0 }, duration: 0.25 }, "<")
-      .to(star, { attr: { "stroke-dashoffset": 0 }, duration: 0.55, ease: "power1.inOut" }, "+=0.12")
-      .to(star, { attr: { "fill-opacity": 1 }, duration: 0.35, ease: "power2.out" }, "-=0.12")
-      .to(star, { attr: { "stroke-width": 0 }, duration: 0.25 }, "<")
-      .to("#reconFlag", { opacity: 0, duration: 0.55, ease: "power1.inOut", onComplete: done });
+    tl.to("#reconFlag", { scale: 1, duration: 0.65, ease: "power3.out" }, 0)
+      .to(shards, { opacity: 1, x: 0, y: 0, rotation: 0, scale: 1, duration: 0.7, stagger: 0.04, ease: "power3.out" }, 0)
+      .to(cres, { attr: { "stroke-dashoffset": 0 }, duration: 0.5, ease: "power1.inOut" }, "+=0.1")
+      .to(cres, { attr: { "fill-opacity": 1 }, duration: 0.3, ease: "power2.out" }, "-=0.12")
+      .to(cres, { attr: { "stroke-width": 0 }, duration: 0.2 }, "<")
+      .to(star, { attr: { "stroke-dashoffset": 0 }, duration: 0.4, ease: "power1.inOut" }, "+=0.08")
+      .to(star, { attr: { "fill-opacity": 1 }, duration: 0.28, ease: "power2.out" }, "-=0.12")
+      .to(star, { attr: { "stroke-width": 0 }, duration: 0.2 }, "<")
+      .to("#reconFlag", { opacity: 0, duration: 0.4, ease: "power1.inOut", onComplete: done });
   }
 
   /* ---------------- RECONSTRUCTION ---------------- */
@@ -195,23 +195,23 @@
     const tl = gsap.timeline();
 
     tl.set("#recFlash", { opacity: 1, scale: 0.4 }, 0)
-      .to("#recFlash", { opacity: 0, scale: 3.2, duration: 1.1, ease: "power2.out" }, 0)
-      .to("#mapSvg", { opacity: 1, duration: 0.9, ease: "power2.out" }, 0.1)
+      .to("#recFlash", { opacity: 0, scale: 3.2, duration: 0.85, ease: "power2.out" }, 0)
+      .to("#mapSvg", { opacity: 1, duration: 0.7, ease: "power2.out" }, 0.08)
       .fromTo(".prov-line",
         { strokeDashoffset: 1 },
-        { strokeDashoffset: 0, duration: 1.7, stagger: 0.14, ease: "power1.inOut" }, 0.2)
+        { strokeDashoffset: 0, duration: 1.25, stagger: 0.09, ease: "power1.inOut" }, 0.15)
       .to(".prov-fill",
-        { opacity: 1, duration: 1.3, ease: "power1.inOut", stagger: 0.08 }, 1.1)
-      .call(() => window.Network.show(), null, 1.2)
-      .to("#networkSvg", { opacity: 1, duration: 0.8, ease: "power2.out" }, 1.2)
-      .to("#dnaSvg", { opacity: 1, duration: 0.8, ease: "power2.out" }, 1.7)
-      .call(() => animateDNA(), null, 1.85)
-      .to(".map-label", { opacity: 1, duration: 0.7, stagger: 0.1, ease: "power2.out" }, 2.2)
-      .to("#mapLabel", { opacity: 1, duration: 0.7, ease: "power2.out" }, 2.6)
-      .to("#dnaLabel", { opacity: 1, duration: 0.7, ease: "power2.out" }, 2.75)
-      .call(() => revealQuote("msg2"), null, 2.9);
+        { opacity: 1, duration: 1.0, ease: "power1.inOut", stagger: 0.06 }, 0.9)
+      .call(() => window.Network.show(), null, 1.0)
+      .to("#networkSvg", { opacity: 1, duration: 0.6, ease: "power2.out" }, 1.0)
+      .to("#dnaSvg", { opacity: 1, duration: 0.6, ease: "power2.out" }, 1.4)
+      .call(() => animateDNA(), null, 1.5)
+      .to(".map-label", { opacity: 1, duration: 0.5, stagger: 0.06, ease: "power2.out" }, 1.8)
+      .to("#mapLabel", { opacity: 1, duration: 0.5, ease: "power2.out" }, 2.05)
+      .to("#dnaLabel", { opacity: 1, duration: 0.5, ease: "power2.out" }, 2.15)
+      .call(() => revealQuote("msg2"), null, 2.3);
 
-    gsap.delayedCall(7.2, () => {
+    gsap.delayedCall(4.3, () => {
       if (onComplete) onComplete();
     });
   }
@@ -261,22 +261,22 @@
     const tl = gsap.timeline({ delay: 0.3 });
     tl.fromTo(".ghost-path",
         { strokeDashoffset: 1 },
-        { strokeDashoffset: 0, duration: 2.6, stagger: 0.12, ease: "power1.inOut" }, 0)
-      .to(".end-map-ghost", { opacity: 1, duration: 1.4, ease: "power1.inOut" }, 0)
-      .to(".end-map-ghost", { opacity: 0, duration: 1.6, ease: "power1.inOut" }, 2.8)
-      .to(".end-cs", { opacity: 0.08, duration: 1.8, ease: "power1.inOut" }, 0)
-      .fromTo(".end-divider", { width: 0, opacity: 0 }, { width: 72, opacity: 1, duration: 1.2, stagger: 0.25, ease: "power3.out" }, 0.6)
+        { strokeDashoffset: 0, duration: 1.9, stagger: 0.1, ease: "power1.inOut" }, 0)
+      .to(".end-map-ghost", { opacity: 1, duration: 1.1, ease: "power1.inOut" }, 0)
+      .to(".end-map-ghost", { opacity: 0, duration: 1.3, ease: "power1.inOut" }, 2.2)
+      .to(".end-cs", { opacity: 0.08, duration: 1.4, ease: "power1.inOut" }, 0)
+      .fromTo(".end-divider", { width: 0, opacity: 0 }, { width: 72, opacity: 1, duration: 1.0, stagger: 0.2, ease: "power3.out" }, 0.5)
       .call(() => revealQuote("msg3"), null, 1.0)
-      .to(".end-foot", { opacity: 1, duration: 0.9, ease: "power2.out" }, 2.4)
+      .to(".end-foot", { opacity: 1, duration: 0.7, ease: "power2.out" }, 2.0)
       /* flag hoist */
       .to("#flagRig", { opacity: 1, duration: 0.8, ease: "power2.out" }, 0.2)
       .fromTo(".flag-cloth",
         { y: 165, scaleY: 0.06, skewX: -12, transformOrigin: "50% 0%" },
-        { y: 0, scaleY: 1, skewX: 0, duration: 2.3, ease: "power3.out", onComplete: waveFlag }, 0.4)
-      .to(".flag-mark", { opacity: 1, duration: 0.9, ease: "power2.out" }, 1.9)
-      .to(".flag-caption", { opacity: 1, duration: 0.7, ease: "power2.out" }, 2.5)
-      .to("#restartBtn", { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 3.1)
-      .add(() => document.getElementById("restartBtn").classList.add("ready"), 3.1);
+        { y: 0, scaleY: 1, skewX: 0, duration: 1.9, ease: "power3.out", onComplete: waveFlag }, 0.4)
+      .to(".flag-mark", { opacity: 1, duration: 0.8, ease: "power2.out" }, 1.6)
+      .to(".flag-caption", { opacity: 1, duration: 0.6, ease: "power2.out" }, 2.1)
+      .to("#restartBtn", { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 2.6)
+      .add(() => document.getElementById("restartBtn").classList.add("ready"), 2.6);
   }
 
   /* ---------------- PUBLIC ---------------- */

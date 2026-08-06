@@ -18,8 +18,9 @@
     document.querySelectorAll(".screen").forEach((s) => {
       s.classList.toggle("is-active", s.id === id);
     });
-    const dustMap = { lock: 0.5, fragments: 0.7, reconstruction: 1.1, ending: 1.3 };
+    const dustMap = { lock: 0.35, fragments: 0.45, reconstruction: 0.7, ending: 0.9 };
     if (window.Dust) Dust.setIntensity(dustMap[id] ?? 1);
+    if (window.Network && window.Network.setActive) Network.setActive(id === "reconstruction");
   }
 
   /* ---------- code slots ---------- */
@@ -79,7 +80,7 @@
     input.blur();
     switchTo("fragments");
     Anim.fragmentsIn();
-    setTimeout(() => Anim.showFragmentsMessage(), reduced ? 200 : 3000);
+    setTimeout(() => Anim.showFragmentsMessage(), reduced ? 200 : 2000);
   }
 
   function startReconstruction() {

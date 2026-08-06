@@ -38,7 +38,7 @@ body {
 #dust {
   position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: 2;
   pointer-events: none;
 }
 
@@ -550,8 +550,7 @@ body {
   height: 120px;
   margin: -60px 0 0 -60px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(244, 250, 240, 0.95) 0%, rgba(46,168,98,0.5) 35%, transparent 70%);
-  filter: blur(4px);
+  background: radial-gradient(circle, rgba(244, 250, 240, 0.95) 0%, rgba(46, 168, 98, 0.55) 30%, rgba(46, 168, 98, 0.18) 52%, transparent 72%);
   opacity: 0;
   pointer-events: none;
   z-index: 4;

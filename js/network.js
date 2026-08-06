@@ -24,7 +24,29 @@
 
   let svg, linksSel, nodesSel;
   let trackPts = [], trackFracs = [], trackTween = null;
+  let active = false, driftTimer = null;
   const REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function driftTick(elapsed) {
+    const nodes = nodesSel.data();
+    nodes.forEach((d, i) => {
+      d.dx = Math.sin(elapsed * 0.0011 + d.phase) * d.ampX;
+      d.dy = Math.cos(elapsed * 0.0009 + d.phase * 1.3) * d.ampY;
+    });
+    linksSel
+      .attr("x1", (d) => d.source.dx + d.source.tx)
+      .attr("y1", (d) => d.source.dy + d.source.ty)
+      .attr("x2", (d) => d.target.dx + d.target.tx)
+      .attr("y2", (d) => d.target.dy + d.target.ty);
+    nodesSel.attr("transform", (d) => `translate(${d.dx + d.tx},${d.dy + d.ty})`);
+  }
+
+  function setActive(on) {
+    active = on;
+    if (on && !driftTimer) driftTimer = d3.timer(driftTick);
+    if (!on && driftTimer) { driftTimer.stop(); driftTimer = null; }
+    if (!on) nodesSel.selectAll(".halo").interrupt().attr("opacity", 0);
+  }
 
   function build() {
     svg = d3.select("#networkSvg");
@@ -92,19 +114,13 @@
 
     nodesSel = g;
 
-    // Pinned to province centroids with a gentle idle drift (feels alive, stays on the map).
-    d3.timer(function (elapsed) {
-      nodes.forEach((d, i) => {
-        d.dx = Math.sin(elapsed * 0.0011 + d.phase) * d.ampX;
-        d.dy = Math.cos(elapsed * 0.0009 + d.phase * 1.3) * d.ampY;
-      });
-      linksSel
-        .attr("x1", (d) => d.source.dx + d.source.tx)
-        .attr("y1", (d) => d.source.dy + d.source.ty)
-        .attr("x2", (d) => d.target.dx + d.target.tx)
-        .attr("y2", (d) => d.target.dy + d.target.ty);
-      nodesSel.attr("transform", (d) => `translate(${d.dx + d.tx},${d.dy + d.ty})`);
-    });
+    // Static home positions — the drift timer (started on show) refines these.
+    linksSel
+      .attr("x1", (d) => d.source.tx)
+      .attr("y1", (d) => d.source.ty)
+      .attr("x2", (d) => d.target.tx)
+      .attr("y2", (d) => d.target.ty);
+    nodesSel.attr("transform", (d) => `translate(${d.tx},${d.ty})`);
 
     buildTrack();
   }
@@ -194,6 +210,7 @@
   function show() {
     window.Reconstruct = window.Reconstruct || {};
     window.Reconstruct.active = true;
+    setActive(true);
 
     // staggered reveal: nodes pop in, links draw themselves
     nodesSel
@@ -217,24 +234,27 @@
         .attr("opacity", 1);
     });
 
-    nodesSel.selectAll(".halo")
-      .each(function () {
-        const h = d3.select(this);
-        h.attr("r", 10).attr("opacity", 0.8)
-          .transition()
-          .duration(2200)
-          .attr("r", 34)
-          .attr("opacity", 0)
-          .on("end", function repeat() {
-            d3.select(this)
-              .attr("r", 10).attr("opacity", 0.8)
-              .transition()
-              .duration(2200)
-              .attr("r", 34)
-              .attr("opacity", 0)
-              .on("end", repeat);
-          });
-      });
+    if (!REDUCED) {
+      nodesSel.selectAll(".halo")
+        .each(function () {
+          const h = d3.select(this);
+          h.attr("r", 10).attr("opacity", 0.8)
+            .transition()
+            .duration(2200)
+            .attr("r", 34)
+            .attr("opacity", 0)
+            .on("end", function repeat() {
+              if (!active) return;
+              d3.select(this)
+                .attr("r", 10).attr("opacity", 0.8)
+                .transition()
+                .duration(2200)
+                .attr("r", 34)
+                .attr("opacity", 0)
+                .on("end", repeat);
+            });
+        });
+    }
 
     nodesSel.selectAll(".net-label")
       .transition()
@@ -295,6 +315,7 @@
   window.Network = {
     init: build,
     show,
+    setActive,
     buildDNA,
     W: 720,
     H: 560
