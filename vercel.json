@@ -1,4 +1,8 @@
 {
+  "version": 2,
+  "framework": "other",
+  "installCommand": null,
+  "buildCommand": null,
   "cleanUrls": true,
   "trailingSlash": false,
   "headers": [
