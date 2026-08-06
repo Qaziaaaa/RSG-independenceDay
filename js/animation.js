@@ -196,22 +196,22 @@
 
     tl.set("#recFlash", { opacity: 1, scale: 0.4 }, 0)
       .to("#recFlash", { opacity: 0, scale: 3.2, duration: 0.85, ease: "power2.out" }, 0)
-      .to("#mapSvg", { opacity: 1, duration: 0.7, ease: "power2.out" }, 0.08)
+      .to("#mapSvg", { opacity: 1, duration: 0.8, ease: "power2.out" }, 0.15)
       .fromTo(".prov-line",
         { strokeDashoffset: 1 },
-        { strokeDashoffset: 0, duration: 1.25, stagger: 0.09, ease: "power1.inOut" }, 0.15)
+        { strokeDashoffset: 0, duration: 1.5, stagger: 0.09, ease: "power1.inOut" }, 0.3)
       .to(".prov-fill",
-        { opacity: 1, duration: 1.0, ease: "power1.inOut", stagger: 0.06 }, 0.9)
-      .call(() => window.Network.show(), null, 1.0)
-      .to("#networkSvg", { opacity: 1, duration: 0.6, ease: "power2.out" }, 1.0)
-      .to("#dnaSvg", { opacity: 1, duration: 0.6, ease: "power2.out" }, 1.4)
-      .call(() => animateDNA(), null, 1.5)
-      .to(".map-label", { opacity: 1, duration: 0.5, stagger: 0.06, ease: "power2.out" }, 1.8)
-      .to("#mapLabel", { opacity: 1, duration: 0.5, ease: "power2.out" }, 2.05)
-      .to("#dnaLabel", { opacity: 1, duration: 0.5, ease: "power2.out" }, 2.15)
-      .call(() => revealQuote("msg2"), null, 2.3);
+        { opacity: 1, duration: 1.2, ease: "power1.inOut", stagger: 0.06 }, 1.6)
+      .call(() => window.Network.show(), null, 2.0)
+      .to("#networkSvg", { opacity: 1, duration: 0.7, ease: "power2.out" }, 2.0)
+      .to("#dnaSvg", { opacity: 1, duration: 0.7, ease: "power2.out" }, 2.6)
+      .call(() => animateDNA(), null, 2.8)
+      .to(".map-label", { opacity: 1, duration: 0.5, stagger: 0.06, ease: "power2.out" }, 3.4)
+      .to("#mapLabel", { opacity: 1, duration: 0.5, ease: "power2.out" }, 3.7)
+      .to("#dnaLabel", { opacity: 1, duration: 0.5, ease: "power2.out" }, 3.85)
+      .call(() => revealQuote("msg2"), null, 4.1);
 
-    gsap.delayedCall(4.3, () => {
+    gsap.delayedCall(8.5, () => {
       if (onComplete) onComplete();
     });
   }
