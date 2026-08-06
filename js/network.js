@@ -5,7 +5,7 @@
   const NODE_FILL = "#0a2417";
 
   const PROVINCES = [
-    { id: "NWFP", tx: 638, ty: 185 },
+    { id: "KPK", tx: 638, ty: 185 },
     { id: "Punjab", tx: 642, ty: 379 },
     { id: "Balochistan", tx: 319, ty: 512 },
     { id: "Sindh", tx: 471, ty: 633 },
@@ -13,8 +13,8 @@
   ];
 
   const LINKS = [
-    { s: "NWFP", t: "Punjab", type: "rail" },
-    { s: "NWFP", t: "Balochistan", type: "road" },
+    { s: "KPK", t: "Punjab", type: "rail" },
+    { s: "KPK", t: "Balochistan", type: "road" },
     { s: "Punjab", t: "Balochistan", type: "road" },
     { s: "Punjab", t: "Sindh", type: "rail" },
     { s: "Balochistan", t: "Sindh", type: "road" },
@@ -128,7 +128,7 @@
   /* --- tracking animation: a probe sweeps the map, connecting the points --- */
   function buildTrack() {
     trackPts = [
-      { id: "NWFP", x: 638, y: 185 },
+      { id: "KPK", x: 638, y: 185 },
       { id: "Punjab", x: 642, y: 379 },
       { id: "Balochistan", x: 319, y: 512 },
       { id: "Sindh", x: 471, y: 633 }
