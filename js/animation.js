@@ -211,7 +211,7 @@
       .to("#dnaLabel", { opacity: 1, duration: 0.5, ease: "power2.out" }, 4.2)
       .call(() => revealQuote("msg2"), null, 4.45);
 
-    gsap.delayedCall(12, () => {
+    gsap.delayedCall(18, () => {
       if (onComplete) onComplete();
     });
   }

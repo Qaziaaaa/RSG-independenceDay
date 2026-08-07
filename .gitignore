@@ -1,13 +1,10 @@
-node_modules/
-.env
-npm-debug.log*
-coverage/
-dist/
-*.log
+# OS
 .DS_Store
 Thumbs.db
 
 # test artifacts
 tests/shot_*.png
 tests/output/
+
+# vercel local project settings
 .vercel

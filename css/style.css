@@ -420,35 +420,39 @@ body {
 .stage {
   position: relative;
   width: 100%;
-  max-width: 1200px;
-  height: 62vh;
-  min-height: 420px;
+  max-width: 1400px;
+  height: 68vh;
+  min-height: 460px;
 }
 
-.stage-map, .stage-network, .stage-dna { position: absolute; top: 0; height: 100%; }
+.stage-map, .stage-network, .stage-dna {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: auto;
+  opacity: 0;
+  overflow: visible;
+}
 
 .stage-map {
-  left: 6%;
-  width: 46%;
-  opacity: 0;
+  left: 3%;
+  width: 48%;
+  aspect-ratio: 5 / 4;
   z-index: 1;
-  overflow: visible;
 }
 
 .stage-network {
-  left: 6%;
-  width: 46%;
-  opacity: 0;
+  left: 3%;
+  width: 48%;
+  aspect-ratio: 5 / 4;
   z-index: 2;
-  overflow: visible;
 }
 
 .stage-dna {
-  right: 2%;
-  width: 30%;
-  opacity: 0;
+  right: 1%;
+  width: 27%;
+  aspect-ratio: 200 / 420;
   z-index: 3;
-  overflow: visible;
 }
 
 /* province fills + outlines */
@@ -723,9 +727,9 @@ body {
   .fragment--medical   { left: 4%;  top: 810px; width: 72%; max-width: 320px; min-height: 150px; rotate: 1.2deg; }
   .frag-map { width: auto; height: 110px; margin: 0 auto; }
 
-  .stage-map, .stage-network { left: 8%; width: 62%; }
-  .stage-dna { right: 0; width: 32%; }
-  .stage { height: 52vh; min-height: 340px; }
+  .stage { height: 54vh; min-height: 0; }
+  .stage-map, .stage-network { left: 2%; width: 64%; }
+  .stage-dna { right: 1%; width: 30%; }
 }
 
 @media (max-width: 560px) {
