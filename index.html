@@ -104,57 +104,72 @@
 <section id="fragments" class="screen" aria-label="Scattered evidence">
   <div class="fragments-field" id="fragmentsField">
 
-    <article class="fragment fragment--letter" data-kind="letter">
-      <div class="frag-head"><span class="frag-icon">&#10077;</span><span class="frag-tag">LETTER</span></div>
-      <p class="letter-body">…we arrived in Lahore, the streets already crowded with families, carts piled high, voices in a dozen tongues…</p>
-      <p class="frag-sign">— 14 Aug, 1947</p>
+    <article class="fragment fragment--mast" data-kind="mast">
+      <div class="frag-sheet">
+        <p class="np-date">14 AUGUST 1947</p>
+        <h2 class="np-mast">THE DAWN</h2>
+        <p class="np-tag">Independence · born at midnight</p>
+      </div>
     </article>
 
-    <article class="fragment fragment--dna" data-kind="dna">
-      <div class="frag-head"><span class="frag-icon">&#9672;</span><span class="frag-tag">DNA</span></div>
-      <p class="dna-seq">ATGCGCTATCG<br>TAACGCGATAGC</p>
-      <p class="dna-note">Population Cluster #42 · shared haplogroup</p>
+    <article class="fragment fragment--head" data-kind="head">
+      <div class="frag-sheet">
+        <h3 class="np-headline">ONE NATION<span>from a thousand fragments</span></h3>
+      </div>
     </article>
 
     <article class="fragment fragment--map" data-kind="map">
-      <div class="frag-head"><span class="frag-icon">&#9675;</span><span class="frag-tag">FIELD MAP</span></div>
-      <svg class="frag-map" viewBox="0 0 200 150" aria-hidden="true">
-        <path d="M40 20 L160 20 L180 75 L150 130 L50 130 L20 75 Z" fill="none" stroke="#6b4f2b" stroke-width="2"/>
-        <line x1="20" y1="75" x2="180" y2="75" stroke="#6b4f2b" stroke-width="1" stroke-dasharray="4 4"/>
-        <line x1="100" y1="20" x2="100" y2="130" stroke="#6b4f2b" stroke-width="1" stroke-dasharray="4 4"/>
-        <circle cx="92" cy="104" r="4" fill="#d4af37"/>
-        <circle cx="92" cy="104" r="9" fill="none" stroke="#d4af37" stroke-width="1" opacity="0.6"/>
-        <text x="98" y="100" fill="#9a8f78" font-size="9">Sindh</text>
-      </svg>
+      <div class="frag-sheet">
+        <svg class="frag-map" viewBox="0 0 200 150" aria-hidden="true">
+          <path d="M40 20 L160 20 L180 75 L150 130 L50 130 L20 75 Z" fill="none" stroke="#6b4f2b" stroke-width="2"/>
+          <line x1="20" y1="75" x2="180" y2="75" stroke="#6b4f2b" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="100" y1="20" x2="100" y2="130" stroke="#6b4f2b" stroke-width="1" stroke-dasharray="4 4"/>
+          <circle cx="92" cy="104" r="4" fill="#7a5a26"/>
+          <circle cx="92" cy="104" r="9" fill="none" stroke="#7a5a26" stroke-width="1" opacity="0.6"/>
+          <text x="98" y="100" fill="#4a3a20" font-size="9">Sindh</text>
+        </svg>
+        <p class="np-caption">Borders drawn in ink, redrawn in blood</p>
+      </div>
     </article>
 
-    <article class="fragment fragment--passport" data-kind="passport">
-      <div class="frag-head"><span class="frag-icon">&#9635;</span><span class="frag-tag">PASSPORT</span></div>
-      <p class="passport-place">KARACHI</p>
-      <p class="passport-year">1948</p>
-      <span class="passport-stamp">APR</span>
-      <p class="frag-sign">Entry · Pier 4</p>
+    <article class="fragment fragment--body-a" data-kind="body-a">
+      <div class="frag-sheet">
+        <p class="np-col">Trains arrived overnight, each platform a living river — families, cattle, and a whole people crossing from one home to another, the stations packed far beyond counting across the new province lines.</p>
+      </div>
     </article>
 
-    <article class="fragment fragment--newspaper" data-kind="newspaper">
-      <div class="frag-head"><span class="frag-icon">&#9636;</span><span class="frag-tag">NEWSPAPER</span></div>
-      <h3 class="np-head">MIGRATION REACHES THOUSANDS</h3>
-      <p class="np-body">Trains arrive overnight carrying families and herds; stations report crowds beyond counting across the province lines…</p>
+    <article class="fragment fragment--body-b" data-kind="body-b">
+      <div class="frag-sheet">
+        <p class="np-col">An algorithm can read the shape of a people — the shared markers, the roads, the letters home — and rebuild what the years scattered across the map.</p>
+      </div>
     </article>
 
-    <article class="fragment fragment--medical" data-kind="medical">
-      <div class="frag-head"><span class="frag-icon">+</span><span class="frag-tag">MEDICAL</span></div>
-      <p class="med-id">POPULATION CLUSTER #42</p>
-      <p class="med-row">Lineage trace · <span class="med-val">Punjab → Bengal</span></p>
-      <p class="med-row">Shared marker · <span class="med-val">M1-1921</span></p>
-      <p class="med-row">Ancestry · <span class="med-val">Indus plain</span></p>
+    <article class="fragment fragment--foot" data-kind="foot">
+      <div class="frag-sheet">
+        <span class="np-seal">&#9733;</span>
+        <p class="np-foot">Evidence collated<br>1947</p>
+      </div>
     </article>
+
+    <!-- tape strips that bind the torn page back together -->
+    <span class="tape" style="left:34%; top:38%; rotate:-6deg;"></span>
+    <span class="tape" style="left:52%; top:60%; rotate:4deg;"></span>
+    <span class="tape" style="left:46%; top:47%; rotate:-2deg;"></span>
 
     <div class="assembled" id="assembledSheet" aria-hidden="true">
-      <div class="assembled-seal">&#9733;</div>
-      <p class="assembled-kicker">Reconstructed</p>
-      <h3 class="assembled-title">One Nation<span>from a thousand fragments</span></h3>
-      <p class="assembled-foot">Evidence collated · one document · 1947</p>
+      <div class="np-masthead">
+        <p class="np-date">14 AUGUST 1947 · INDEPENDENCE EVE</p>
+        <h2 class="np-mast">THE DAWN</h2>
+        <p class="np-tag">One nation · reconstructed from fragments</p>
+      </div>
+      <div class="np-rule"></div>
+      <h3 class="np-headline">ONE NATION<span>from a thousand fragments</span></h3>
+      <div class="np-cols">
+        <p>Trains arrived overnight, each platform a living river — families, cattle, and a whole people crossing from one home to another.</p>
+        <p>An algorithm can read the shape of a people — the shared markers, the roads, the letters home — and rebuild what the years scattered.</p>
+      </div>
+      <div class="np-rule"></div>
+      <p class="np-foot">PAKISTAN · 1947 · RECONSTRUCTED FROM SCATTERED EVIDENCE</p>
     </div>
 
   </div>

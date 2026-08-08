@@ -120,6 +120,7 @@
     const field = document.getElementById("fragmentsField");
     const sheet = document.getElementById("assembledSheet");
     const els = Array.from(document.querySelectorAll(".fragment"));
+    const tapes = Array.from(document.querySelectorAll(".tape"));
     const rand = gsap.utils.random;
 
     if (!field || !sheet) {
@@ -138,48 +139,86 @@
     }
 
     const fr = field.getBoundingClientRect();
-    const cx = fr.width / 2;
-    const cy = fr.height / 2;
 
     gsap.to("#fragments .quote", { opacity: 0, duration: 0.5 });
     gsap.to("#reconstructBtn", { opacity: 0, duration: 0.4 });
 
+    // where each piece belongs inside the page (fractions of the field)
+    const TARGETS = {
+      mast:    { x: 0.5,  y: 0.10, scale: 0.94 },
+      head:    { x: 0.5,  y: 0.30, scale: 0.96 },
+      map:     { x: 0.33, y: 0.55, scale: 0.95 },
+      "body-a": { x: 0.53, y: 0.56, scale: 0.95 },
+      "body-b": { x: 0.68, y: 0.72, scale: 0.95 },
+      foot:    { x: 0.5,  y: 0.88, scale: 0.94 }
+    };
+
     const tl = gsap.timeline();
 
-    // every scrap is pulled toward the one sheet that will become the message
+    // every scrap is sucked toward its place in the page
     els.forEach((el, i) => {
+      const kind = el.dataset.kind || "mast";
+      const t = TARGETS[kind] || { x: 0.5, y: 0.5, scale: 0.95 };
       const r = el.getBoundingClientRect();
-      const dx = cx - (r.left - fr.left + r.width / 2);
-      const dy = cy - (r.top - fr.top + r.height / 2);
+      const tx = t.x * fr.width - (r.left - fr.left + r.width / 2);
+      const ty = t.y * fr.height - (r.top - fr.top + r.height / 2);
       tl.to(el, {
-        x: `+=${dx}`,
-        y: `+=${dy}`,
-        rotation: () => rand(-16, 16),
-        scale: 0.94,
-        duration: 0.85,
+        rotate: 0,
+        x: tx,
+        y: ty,
+        scale: t.scale,
+        duration: 1.0,
         ease: "power3.in",
-        delay: i * 0.05
+        delay: i * 0.07
       }, 0);
+      tl.fromTo(el,
+        { rotation: () => rand(-14, 14) },
+        { rotation: 0, duration: 1.0, ease: "power3.in", delay: i * 0.07 },
+        0);
     });
 
-    // the unified torn sheet assembles underneath as they converge
+    // little bursts where the pieces meet
+    tl.add(() => {
+      Object.keys(TARGETS).forEach((k) => {
+        joinFlash(TARGETS[k].x * fr.width, TARGETS[k].y * fr.height);
+      });
+    }, 1.1);
+
+    // the sheet assembles underneath, then the seams are taped
     tl.fromTo(sheet,
-      { opacity: 0, scale: 0.42 },
-      { opacity: 1, scale: 1, duration: 0.95, ease: "power3.out" }, 0.4)
+      { opacity: 0, scale: 0.9 },
+      { opacity: 1, scale: 1, duration: 0.9, ease: "power3.out" }, 0.55)
       .fromTo("#assembledSheet > *",
-        { opacity: 0, y: 16 },
-        { opacity: 1, y: 0, duration: 0.55, stagger: 0.12, ease: "power2.out" }, 0.95);
+        { opacity: 0, y: 12 },
+        { opacity: 1, y: 0, duration: 0.5, stagger: 0.09, ease: "power2.out" }, 1.0)
+      .fromTo(tapes,
+        { opacity: 0, scale: 1.5 },
+        { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out", stagger: 0.14 }, 1.15);
+
+    // the scraps dissolve into the finished page
+    tl.to(els, { opacity: 0, scale: 0.82, duration: 0.45, ease: "power2.in", stagger: 0.05 }, 1.55);
 
     // one strong impact as they become a single document
     tl.add(() => {
       flash();
       shakeField();
-      gsap.fromTo(sheet, { scale: 1.07 }, { scale: 1, duration: 0.6, ease: "elastic.out(1, 0.45)", delay: 0.04 });
-    }, 0.9);
+      gsap.fromTo(sheet, { scale: 1.05 }, { scale: 1, duration: 0.6, ease: "elastic.out(1, 0.45)", delay: 0.04 });
+    }, 1.9);
 
-    tl.to(els, { opacity: 0, scale: 0.72, duration: 0.45, ease: "power2.in", stagger: 0.05 }, 0.98);
+    tl.call(() => { if (onComplete) onComplete(); }, null, 2.6);
+  }
 
-    tl.call(() => { if (onComplete) onComplete(); }, null, 2.3);
+  function joinFlash(x, y) {
+    const field = document.getElementById("fragmentsField");
+    if (!field) return;
+    const div = document.createElement("div");
+    div.className = "join-flash";
+    div.style.left = x + "px";
+    div.style.top = y + "px";
+    field.appendChild(div);
+    gsap.fromTo(div,
+      { opacity: 1, scale: 0.4 },
+      { opacity: 0, scale: 1.9, duration: 0.7, ease: "power2.out", onComplete: () => div.remove() });
   }
 
   function shakeField() {
@@ -295,33 +334,33 @@
       .to("#recFlash", { opacity: 0, scale: 3.2, duration: 0.85, ease: "power2.out" }, 0)
       .to("#mapSvg", { opacity: 1, duration: 0.7, ease: "power2.out" }, 0.2)
 
-      // ragged outlines of the separated pieces draw themselves
+      // ragged outlines of the separated pieces draw themselves — unhurried
       .fromTo(".prov-line",
         { strokeDashoffset: 1 },
-        { strokeDashoffset: 0, duration: 1.5, stagger: 0.09, ease: "power1.inOut" }, 0.4)
+        { strokeDashoffset: 0, duration: 2.6, stagger: 0.1, ease: "power1.inOut" }, 0.4)
       .to(".prov-fill",
-        { opacity: 1, duration: 1.0, ease: "power1.inOut", stagger: 0.06 }, 1.3)
+        { opacity: 1, duration: 1.7, ease: "power1.inOut", stagger: 0.07 }, 1.6)
 
-      // DNA builds side-by-side with the map, not after it
-      .to("#dnaSvg", { opacity: 1, duration: 0.6, ease: "power2.out" }, 0.4)
-      .call(() => animateDNA(), null, 0.4)
+      // DNA builds beside the map — strand draw-in then rungs snap into place
+      .to("#dnaSvg", { opacity: 1, duration: 0.6, ease: "power2.out" }, 0.5)
+      .call(() => animateDNA(), null, 0.5)
 
       // migration network traces over the still-separated pieces
-      .call(() => window.Network.show(), null, 1.5)
-      .to("#networkSvg", { opacity: 1, duration: 0.7, ease: "power2.out" }, 1.5)
+      .call(() => window.Network.show(), null, 2.0)
+      .to("#networkSvg", { opacity: 1, duration: 0.7, ease: "power2.out" }, 2.0)
 
       // THE MERGE — every province slams home: no gaps, one nation
       .to(".prov-fill, .prov-line",
-        { x: 0, y: 0, rotation: 0, scale: 1, duration: 0.85, ease: "power4.in", stagger: 0.04 }, 2.2)
-      .add(() => slamImpact(), 3.05)
+        { x: 0, y: 0, rotation: 0, scale: 1, duration: 1.7, ease: "power4.in", stagger: 0.06 }, 3.8)
+      .add(() => slamImpact(), 5.5)
       // internal seams dissolve into a single silhouette
-      .to(".prov-line", { opacity: 0.22, duration: 1.0, ease: "power1.inOut" }, 3.1)
-      .to(".map-label", { opacity: 1, duration: 0.5, stagger: 0.05, ease: "power2.out" }, 3.4)
-      .to("#mapLabel", { opacity: 1, duration: 0.5, ease: "power2.out" }, 3.7)
-      .to("#dnaLabel", { opacity: 1, duration: 0.5, ease: "power2.out" }, 3.75)
-      .call(() => revealQuote("msg2"), null, 3.9);
+      .to(".prov-line", { opacity: 0.22, duration: 1.0, ease: "power1.inOut" }, 5.6)
+      .to(".map-label", { opacity: 1, duration: 0.5, stagger: 0.05, ease: "power2.out" }, 6.0)
+      .to("#mapLabel", { opacity: 1, duration: 0.5, ease: "power2.out" }, 6.4)
+      .to("#dnaLabel", { opacity: 1, duration: 0.5, ease: "power2.out" }, 6.45)
+      .call(() => revealQuote("msg2"), null, 6.9);
 
-    gsap.delayedCall(18, () => {
+    gsap.delayedCall(21, () => {
       if (onComplete) onComplete();
     });
   }
@@ -330,51 +369,36 @@
     const strands = Array.from(document.querySelectorAll("#dnaSvg .dna-strand"));
     if (!strands.length) return;
 
-    const amp = 44, yStart = 26, yEnd = 388, step = 7;
-    const phases = [0, Math.PI];
-
-    function makePath(phase, a) {
-      let d = "";
-      for (let y = yStart; y <= yEnd; y += step) {
-        const x = 100 + a * Math.sin(((y - yStart) / (yEnd - yStart)) * Math.PI * 5 + phase);
-        d += (y === yStart ? "M" : " L") + x.toFixed(1) + " " + y.toFixed(1);
-      }
-      return d;
-    }
-
-    strands.forEach((s) => gsap.set(s, { strokeDasharray: 1, strokeDashoffset: 1 }));
-
-    // strands grow out of a single central core — like the provinces converging
-    const proxy = { a: 0 };
-    gsap.to(proxy, {
-      a: amp,
-      duration: 1.9,
-      ease: "power2.inOut",
-      delay: 0.2,
-      onUpdate: () => {
-        strands.forEach((s, idx) => {
-          s.setAttribute("d", makePath(phases[idx], proxy.a));
-        });
-      }
-    });
-
     const rungs = Array.from(document.querySelectorAll("#dnaSvg .dna-rung")).map((el) => ({
       el,
       x1: parseFloat(el.getAttribute("x1")),
       x2: parseFloat(el.getAttribute("x2"))
     }));
 
+    // strands draw themselves in from the top of the helix
+    strands.forEach((s) => {
+      const len = s.getTotalLength();
+      gsap.set(s, { strokeDasharray: len, strokeDashoffset: len });
+      gsap.to(s, { strokeDashoffset: 0, duration: 2.0, ease: "power2.inOut", delay: 0.3 });
+    });
+
+    // rungs snap into place, unhurried
     rungs.forEach((r, i) => {
       gsap.fromTo(r.el,
         { attr: { x1: 100, x2: 100 }, opacity: 0 },
         {
           attr: { x1: r.x1, x2: r.x2 },
           opacity: 1,
-          duration: 0.55,
+          duration: 0.5,
           ease: "back.out(1.8)",
-          delay: 1.0 + i * 0.03
+          delay: 2.6 + i * 0.06
         });
     });
+
+    // once complete, a soft glow settles over the double helix
+    gsap.fromTo("#dnaSvg",
+      { filter: "drop-shadow(0 0 0px rgba(212, 175, 55, 0))" },
+      { filter: "drop-shadow(0 0 16px rgba(212, 175, 55, 0.45))", duration: 1.0, ease: "power2.out", delay: 3.8 });
   }
 
   /* ---------------- ENDING ---------------- */

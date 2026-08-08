@@ -282,14 +282,14 @@
 
     svg.append("path")
       .attr("class", "dna-strand")
-      .attr("stroke-width", 3)
+      .attr("stroke-width", 3.5)
       .attr("fill", "none")
       .attr("stroke-linecap", "round")
       .attr("d", strandPath(0));
 
     svg.append("path")
       .attr("class", "dna-strand")
-      .attr("stroke-width", 3)
+      .attr("stroke-width", 3.5)
       .attr("fill", "none")
       .attr("stroke-linecap", "round")
       .attr("stroke", "rgba(190,235,205,0.8)")
@@ -301,7 +301,7 @@
       .data(d3.range(yStart + 8, yEnd, rungStep))
       .join("line")
       .attr("class", "dna-rung")
-      .attr("stroke-width", 1)
+      .attr("stroke-width", 1.2)
       .each(function (y) {
         const x1 = cx + amp * Math.sin(((y - yStart) / (yEnd - yStart)) * Math.PI * 5);
         const x2 = cx + amp * Math.sin(((y - yStart) / (yEnd - yStart)) * Math.PI * 5 + Math.PI);
