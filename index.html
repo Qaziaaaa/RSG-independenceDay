@@ -20,6 +20,23 @@
 <canvas id="dust" aria-hidden="true"></canvas>
 <div id="flashOverlay" aria-hidden="true"></div>
 
+<svg class="svg-filters" width="0" height="0" aria-hidden="true">
+  <defs>
+    <filter id="torn-a" x="-12%" y="-12%" width="124%" height="124%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035 0.05" numOctaves="3" seed="3" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="torn-b" x="-12%" y="-12%" width="124%" height="124%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.045 0.04" numOctaves="3" seed="17" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="9" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="torn-sheet" x="-12%" y="-12%" width="124%" height="124%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.018 0.03" numOctaves="4" seed="8" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="11" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
 <!-- ============ S1 · LOCK ============ -->
 <section id="lock" class="screen is-active" aria-label="Lock screen">
   <div class="lock-wrap">
@@ -133,6 +150,13 @@
       <p class="med-row">Ancestry · <span class="med-val">Indus plain</span></p>
     </article>
 
+    <div class="assembled" id="assembledSheet" aria-hidden="true">
+      <div class="assembled-seal">&#9733;</div>
+      <p class="assembled-kicker">Reconstructed</p>
+      <h3 class="assembled-title">One Nation<span>from a thousand fragments</span></h3>
+      <p class="assembled-foot">Evidence collated · one document · 1947</p>
+    </div>
+
   </div>
 
   <div class="fragments-message" id="fragmentsMessage">
@@ -147,7 +171,9 @@
 
 <!-- ============ S3 · RECONSTRUCTION ============ -->
 <section id="reconstruction" class="screen" aria-label="Reconstruction">
+  <div class="rec-wrap">
   <div class="stage">
+    <div class="map-frame">
             <svg id="mapSvg" class="stage-map" viewBox="0 0 1000 800" aria-hidden="true">
 <g id="provFills">
       <path class="prov-fill" d="M 759.6 271.8 L 755.5 272.7 L 735.6 261.2 L 727.1 262.5 L 723.7 257.4 L 718.3 255.8 L 719.0 249.6 L 715.6 240.1 L 718.6 232.1 L 715.5 226.1 L 716.8 221.1 L 712.4 195.9 L 708.4 188.6 L 710.6 178.1 L 720.9 177.4 L 725.6 166.0 L 738.7 161.2 L 744.5 148.1 L 754.7 146.8 L 764.7 150.1 L 772.4 146.0 L 781.6 151.8 L 780.4 158.8 L 791.7 161.7 L 794.5 165.1 L 804.5 159.3 L 809.7 165.9 L 809.4 173.3 L 815.2 178.4 L 809.3 177.7 L 804.1 173.2 L 777.1 170.9 L 769.4 166.6 L 755.3 165.0 L 746.8 170.8 L 737.4 170.5 L 734.2 181.3 L 727.9 185.5 L 727.7 189.1 L 734.2 188.5 L 738.2 193.6 L 734.2 206.0 L 745.8 204.8 L 752.3 207.0 L 750.8 214.9 L 737.2 222.7 L 740.9 230.5 L 744.4 230.7 L 749.1 236.9 L 748.3 242.7 L 740.0 249.5 L 750.0 258.9 L 757.5 260.4 L 755.9 265.5 L 760.8 266.4 L 763.8 273.1 L 759.6 271.8 Z"/>
@@ -183,6 +209,7 @@
     </svg>
 
     <svg id="networkSvg" class="stage-network" aria-hidden="true"></svg>
+    </div>
 
     <svg id="dnaSvg" class="stage-dna" viewBox="0 0 200 420" aria-hidden="true">
       <text id="dnaLabel" x="100" y="408" text-anchor="middle" class="stage-label">DNA · NETWORK</text>
@@ -207,6 +234,7 @@
   <div class="rec-message" id="recMessage">
     <p class="frag-rule"></p>
     <h2 class="quote split-me" data-split="msg2">Algorithms rebuild hidden structures from scattered evidence.</h2>
+  </div>
   </div>
 </section>
 
