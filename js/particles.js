@@ -3,14 +3,20 @@
   const canvas = document.getElementById("dust");
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
-  let w, h, particles = [];
+  const REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let w, h, particles = [], rafId = null;
   const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+
+  function countFor() {
+    return Math.min(Math.round((w * h) / 26000), REDUCED ? 24 : 72);
+  }
 
   function resize() {
     w = canvas.width = window.innerWidth * DPR;
     h = canvas.height = window.innerHeight * DPR;
     canvas.style.width = window.innerWidth + "px";
     canvas.style.height = window.innerHeight + "px";
+    if (particles.length !== countFor()) particles = Array.from({ length: countFor() }, make);
   }
 
   function make() {
@@ -18,19 +24,16 @@
       x: Math.random() * w,
       y: Math.random() * h,
       r: (Math.random() * 1.5 + 0.3) * DPR,
-      vx: (Math.random() - 0.5) * 0.16 * DPR,
-      vy: -((Math.random() * 0.24 + 0.06) * DPR),
-      a: Math.random() * Math.PI * 2,
+      vx: REDUCED ? 0 : (Math.random() - 0.5) * 0.16 * DPR,
+      vy: REDUCED ? 0 : -((Math.random() * 0.24 + 0.06) * DPR),
       tw: Math.random() * Math.PI * 2,
       gold: Math.random() < 0.35
     };
   }
 
-  const COUNT = Math.min(Math.round((w * h) / 26000), 72);
-
   function init() {
     resize();
-    particles = Array.from({ length: COUNT }, make);
+    particles = Array.from({ length: countFor() }, make);
   }
 
   let intensity = 1;
@@ -58,11 +61,15 @@
 
   function loop() {
     if (visible && w > 0 && h > 0) draw();
-    requestAnimationFrame(loop);
+    rafId = requestAnimationFrame(loop);
   }
+
+  function pause() { if (rafId) { cancelAnimationFrame(rafId); rafId = null; } }
+  function play() { if (!rafId) rafId = requestAnimationFrame(loop); }
 
   document.addEventListener("visibilitychange", () => {
     visible = !document.hidden;
+    if (visible) play(); else pause();
   });
 
   window.Dust = {
@@ -73,5 +80,5 @@
   window.addEventListener("resize", () => { resize(); });
 
   init();
-  loop();
+  play();
 })();

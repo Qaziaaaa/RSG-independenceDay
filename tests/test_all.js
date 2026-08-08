@@ -59,8 +59,8 @@ async function run(vp) {
 
   /* --- flag assembly: poll the sequence — shards converge, crescent fills, then it hands off --- */
   const flag = { samples: [] };
-  for (let i = 0; i < 14; i++) {
-    await sleep(400);
+  for (let i = 0; i < 26; i++) {
+    await sleep(360);
     const s = await page.evaluate(() => {
       const f = document.getElementById("reconFlag");
       if (!f) return null;
@@ -78,7 +78,7 @@ async function run(vp) {
   flag.ok = !!(sawAssembled && sawGone);
 
   /* --- ending: word integrity, caption, replay button, overflow --- */
-  await page.waitForFunction(() => document.getElementById("restartBtn").classList.contains("ready"), { timeout: 30000 });
+  await page.waitForFunction(() => document.getElementById("restartBtn").classList.contains("ready"), { timeout: 50000 });
   await sleep(1000);
   const end = await page.evaluate(() => {
     const el = document.querySelector(".end-quote");
