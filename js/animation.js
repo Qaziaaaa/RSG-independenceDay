@@ -117,35 +117,77 @@
   }
 
   function reconstruct(onComplete) {
-    const cx = window.innerWidth / 2;
-    const cy = window.innerHeight / 2;
+    const field = document.getElementById("fragmentsField");
+    const sheet = document.getElementById("assembledSheet");
     const els = Array.from(document.querySelectorAll(".fragment"));
+    const rand = gsap.utils.random;
 
-    els.forEach((el) => {
+    if (!field || !sheet) {
+      gsap.to(els, { opacity: 0, duration: 0.3 });
+      gsap.delayedCall(0.35, () => { flash(); if (onComplete) onComplete(); });
+      return;
+    }
+
+    if (REDUCED) {
+      gsap.set(els, { opacity: 0 });
+      gsap.set(sheet, { opacity: 1 });
+      gsap.set("#assembledSheet > *", { opacity: 1 });
+      flash();
+      gsap.delayedCall(0.3, () => { if (onComplete) onComplete(); });
+      return;
+    }
+
+    const fr = field.getBoundingClientRect();
+    const cx = fr.width / 2;
+    const cy = fr.height / 2;
+
+    gsap.to("#fragments .quote", { opacity: 0, duration: 0.5 });
+    gsap.to("#reconstructBtn", { opacity: 0, duration: 0.4 });
+
+    const tl = gsap.timeline();
+
+    // every scrap is pulled toward the one sheet that will become the message
+    els.forEach((el, i) => {
       const r = el.getBoundingClientRect();
-      const dx = cx - (r.left + r.width / 2);
-      const dy = cy - (r.top + r.height / 2);
-      gsap.to(el, {
+      const dx = cx - (r.left - fr.left + r.width / 2);
+      const dy = cy - (r.top - fr.top + r.height / 2);
+      tl.to(el, {
         x: `+=${dx}`,
         y: `+=${dy}`,
-        rotation: () => gsap.utils.random(180, 320),
-        scale: 0.3,
-        opacity: 0,
-        duration: 0.75,
-        ease: "power2.in",
-        delay: 0.1
-      });
+        rotation: () => rand(-16, 16),
+        scale: 0.94,
+        duration: 0.85,
+        ease: "power3.in",
+        delay: i * 0.05
+      }, 0);
     });
 
-    gsap.to("#fragments .quote", { opacity: 0, duration: 0.5, delay: 0.1 });
-    gsap.to("#reconstructBtn", { opacity: 0, duration: 0.4, delay: 0.1 });
+    // the unified torn sheet assembles underneath as they converge
+    tl.fromTo(sheet,
+      { opacity: 0, scale: 0.42 },
+      { opacity: 1, scale: 1, duration: 0.95, ease: "power3.out" }, 0.4)
+      .fromTo("#assembledSheet > *",
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.55, stagger: 0.12, ease: "power2.out" }, 0.95);
 
-    gsap.delayedCall(0.75, () => {
+    // one strong impact as they become a single document
+    tl.add(() => {
       flash();
-      gsap.delayedCall(0.3, () => {
-        if (onComplete) onComplete();
-      });
-    });
+      shakeField();
+      gsap.fromTo(sheet, { scale: 1.07 }, { scale: 1, duration: 0.6, ease: "elastic.out(1, 0.45)", delay: 0.04 });
+    }, 0.9);
+
+    tl.to(els, { opacity: 0, scale: 0.72, duration: 0.45, ease: "power2.in", stagger: 0.05 }, 0.98);
+
+    tl.call(() => { if (onComplete) onComplete(); }, null, 2.3);
+  }
+
+  function shakeField() {
+    const field = document.getElementById("fragmentsField");
+    if (!field) return;
+    gsap.timeline()
+      .to(field, { x: -10, duration: 0.05, yoyo: true, repeat: 5, ease: "power1.inOut" })
+      .to(field, { x: 0, duration: 0.12 });
   }
 
   /* ---------------- FLAG ASSEMBLY ---------------- */
@@ -191,25 +233,93 @@
   }
 
   /* ---------------- RECONSTRUCTION ---------------- */
+  function scatterProvinces() {
+    const fills = Array.from(document.querySelectorAll(".prov-fill"));
+    const lines = Array.from(document.querySelectorAll(".prov-line"));
+    const rand = gsap.utils.random;
+    fills.forEach((p, i) => {
+      let bb;
+      try { bb = p.getBBox(); } catch (e) { return; }
+      const px = bb.x + bb.width / 2;
+      const py = bb.y + bb.height / 2;
+      const dx = px - 500;
+      const dy = py - 400;
+      const len = Math.hypot(dx, dy) || 1;
+      const dist = rand(70, 165);
+      const ox = (dx / len) * dist + rand(-40, 40);
+      const oy = (dy / len) * dist + rand(-40, 40);
+      gsap.set([p, lines[i]], { x: ox, y: oy, rotation: rand(-9, 9), svgOrigin: "500 400" });
+    });
+  }
+
+  function slamImpact() {
+    const stage = document.querySelector("#reconstruction .stage");
+    if (stage) {
+      gsap.timeline()
+        .to(stage, { x: -11, duration: 0.05, yoyo: true, repeat: 5, ease: "power1.inOut" })
+        .to(stage, { x: 0, duration: 0.12 });
+    }
+    const flashEl = document.getElementById("recFlash");
+    if (flashEl) {
+      gsap.timeline()
+        .fromTo(flashEl, { opacity: 1, scale: 0.8 }, { opacity: 0, scale: 3.6, duration: 0.7, ease: "power2.out" });
+    }
+    gsap.fromTo("#mapSvg",
+      { scale: 1.05, transformOrigin: "50% 50%" },
+      { scale: 1, duration: 0.6, ease: "elastic.out(1, 0.45)", delay: 0.05 });
+    gsap.fromTo("#dnaSvg",
+      { scale: 1.04, transformOrigin: "50% 50%" },
+      { scale: 1, duration: 0.5, ease: "elastic.out(1, 0.45)", delay: 0.06 });
+    gsap.fromTo(".prov-fill",
+      { filter: "brightness(1.5)" },
+      { filter: "brightness(1)", duration: 0.5, ease: "power2.out", delay: 0.05 });
+  }
+
   function reconstruction(onComplete) {
     const tl = gsap.timeline();
 
+    if (REDUCED) {
+      tl.set("#mapSvg, #networkSvg, #dnaSvg, .map-label, #mapLabel, #dnaLabel", { opacity: 1 })
+        .set(".prov-fill", { opacity: 1 })
+        .set(".prov-line", { strokeDashoffset: 0, opacity: 1 })
+        .call(() => window.Network.show(), null, 0)
+        .call(() => revealQuote("msg2"), null, 0.1);
+      gsap.delayedCall(14, () => { if (onComplete) onComplete(); });
+      return;
+    }
+
+    // provinces start as separated scraps — gaps between them
+    scatterProvinces();
+
     tl.set("#recFlash", { opacity: 1, scale: 0.4 }, 0)
       .to("#recFlash", { opacity: 0, scale: 3.2, duration: 0.85, ease: "power2.out" }, 0)
-      .to("#mapSvg", { opacity: 1, duration: 0.8, ease: "power2.out" }, 0.2)
+      .to("#mapSvg", { opacity: 1, duration: 0.7, ease: "power2.out" }, 0.2)
+
+      // ragged outlines of the separated pieces draw themselves
       .fromTo(".prov-line",
         { strokeDashoffset: 1 },
-        { strokeDashoffset: 0, duration: 1.5, stagger: 0.09, ease: "power1.inOut" }, 0.35)
+        { strokeDashoffset: 0, duration: 1.5, stagger: 0.09, ease: "power1.inOut" }, 0.4)
       .to(".prov-fill",
-        { opacity: 1, duration: 1.2, ease: "power1.inOut", stagger: 0.06 }, 1.7)
-      .call(() => window.Network.show(), null, 2.3)
-      .to("#networkSvg", { opacity: 1, duration: 0.7, ease: "power2.out" }, 2.3)
-      .to("#dnaSvg", { opacity: 1, duration: 0.7, ease: "power2.out" }, 2.9)
-      .call(() => animateDNA(), null, 3.1)
-      .to(".map-label", { opacity: 1, duration: 0.5, stagger: 0.06, ease: "power2.out" }, 3.7)
-      .to("#mapLabel", { opacity: 1, duration: 0.5, ease: "power2.out" }, 4.05)
-      .to("#dnaLabel", { opacity: 1, duration: 0.5, ease: "power2.out" }, 4.2)
-      .call(() => revealQuote("msg2"), null, 4.45);
+        { opacity: 1, duration: 1.0, ease: "power1.inOut", stagger: 0.06 }, 1.3)
+
+      // DNA builds side-by-side with the map, not after it
+      .to("#dnaSvg", { opacity: 1, duration: 0.6, ease: "power2.out" }, 0.4)
+      .call(() => animateDNA(), null, 0.4)
+
+      // migration network traces over the still-separated pieces
+      .call(() => window.Network.show(), null, 1.5)
+      .to("#networkSvg", { opacity: 1, duration: 0.7, ease: "power2.out" }, 1.5)
+
+      // THE MERGE — every province slams home: no gaps, one nation
+      .to(".prov-fill, .prov-line",
+        { x: 0, y: 0, rotation: 0, scale: 1, duration: 0.85, ease: "power4.in", stagger: 0.04 }, 2.2)
+      .add(() => slamImpact(), 3.05)
+      // internal seams dissolve into a single silhouette
+      .to(".prov-line", { opacity: 0.22, duration: 1.0, ease: "power1.inOut" }, 3.1)
+      .to(".map-label", { opacity: 1, duration: 0.5, stagger: 0.05, ease: "power2.out" }, 3.4)
+      .to("#mapLabel", { opacity: 1, duration: 0.5, ease: "power2.out" }, 3.7)
+      .to("#dnaLabel", { opacity: 1, duration: 0.5, ease: "power2.out" }, 3.75)
+      .call(() => revealQuote("msg2"), null, 3.9);
 
     gsap.delayedCall(18, () => {
       if (onComplete) onComplete();
@@ -217,12 +327,35 @@
   }
 
   function animateDNA() {
-    const strands = document.querySelectorAll("#dnaSvg .dna-strand");
-    strands.forEach((s) => {
-      const len = s.getTotalLength();
-      gsap.fromTo(s,
-        { strokeDasharray: len, strokeDashoffset: len },
-        { strokeDashoffset: 0, duration: 1.8, delay: 0.25, ease: "power2.inOut" });
+    const strands = Array.from(document.querySelectorAll("#dnaSvg .dna-strand"));
+    if (!strands.length) return;
+
+    const amp = 44, yStart = 26, yEnd = 388, step = 7;
+    const phases = [0, Math.PI];
+
+    function makePath(phase, a) {
+      let d = "";
+      for (let y = yStart; y <= yEnd; y += step) {
+        const x = 100 + a * Math.sin(((y - yStart) / (yEnd - yStart)) * Math.PI * 5 + phase);
+        d += (y === yStart ? "M" : " L") + x.toFixed(1) + " " + y.toFixed(1);
+      }
+      return d;
+    }
+
+    strands.forEach((s) => gsap.set(s, { strokeDasharray: 1, strokeDashoffset: 1 }));
+
+    // strands grow out of a single central core — like the provinces converging
+    const proxy = { a: 0 };
+    gsap.to(proxy, {
+      a: amp,
+      duration: 1.9,
+      ease: "power2.inOut",
+      delay: 0.2,
+      onUpdate: () => {
+        strands.forEach((s, idx) => {
+          s.setAttribute("d", makePath(phases[idx], proxy.a));
+        });
+      }
     });
 
     const rungs = Array.from(document.querySelectorAll("#dnaSvg .dna-rung")).map((el) => ({
@@ -238,8 +371,8 @@
           attr: { x1: r.x1, x2: r.x2 },
           opacity: 1,
           duration: 0.55,
-          ease: "power1.inOut",
-          delay: 0.35 + i * 0.045
+          ease: "back.out(1.8)",
+          delay: 1.0 + i * 0.03
         });
     });
   }

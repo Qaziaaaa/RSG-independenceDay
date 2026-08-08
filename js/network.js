@@ -9,7 +9,7 @@
     { id: "Punjab", tx: 642, ty: 379 },
     { id: "Balochistan", tx: 319, ty: 512 },
     { id: "Sindh", tx: 471, ty: 633 },
-    { id: "Bengal", tx: 1160, ty: 655 }
+    { id: "Bengal", tx: 878, ty: 588 }
   ];
 
   const LINKS = [
